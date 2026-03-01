@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منصة مدرب الكاراتيه | Karate Master</title>
+  <link rel="icon" href="karate-icon.png" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="particles-container" id="particles-js"></div>
+  
+  <div class="app-container">
+    <div class="karate-logo animate__animated animate__fadeInDown">
+      <div class="logo-icon animate__animated animate__pulse animate__infinite">
+        <img src="logo.jpg" height="160">
+      </div>
+      <h1>BAHGAT FIGHTERS</h1>
+      <div class="logo-subtitle">نظام متكامل لمتابعة اللاعبين</div>
+    </div>
+
+    <div class="main-card animate__animated animate__fadeIn" id="loginCard">
+      <div class="card-header">
+        <i class="fas fa-user-shield"></i>
+        <h2>تسجيل الدخول</h2>
+      </div>
+      <div class="card-body">
+      <div class="input-group animate__animated">
+        <!-- <i class="fas fa-lock"></i> -->
+        <input type="password" id="playerPassword" placeholder="أدخل كلمة المرور">
+      </div>
+      <button class="action-btn animate__animated animate__pulse" onclick="login()">
+        <i class="fas fa-sign-in-alt"></i> دخول للنظام
+      </button>
+      </div>
+    </div>
+
+    <div class="main-card profile-card" id="profileCard" style="display:none;">
+      <div class="profile-header animate__animated">
+        <div class="avatar-container">
+          <div class="avatar-circle">
+            <i class="fas fa-user-ninja"></i>
+          </div>
+          <div class="rank-badge" id="rankBadge">
+            <span id="playerRank"></span>
+          </div>
+        </div>
+        <h2 id="playerName"></h2>
+        <div class="belt-level">
+          <div class="belt-progress" id="beltProgress"></div>
+          <span>الحزام بنى 1</span>
+        </div>
+      </div>
+
+      <div class="stats-container animate__animated">
+        <div class="stat-item">
+          <div class="stat-icon points-icon">
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value" id="playerPoints">0</div>
+            <div class="stat-label">النقاط</div>
+          </div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-icon absences-icon">
+            <i class="fas fa-calendar-times"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value" id="playerAbsences">0</div>
+            <div class="stat-label">الغيابات</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-container animate__animated">
+        <h3>تقدم الأسبوع</h3>
+        <div class="progress-bar">
+          <div class="progress-fill" id="weekProgress"></div>
+        </div>
+        <div class="progress-labels">
+          <span>0%</span>
+          <span>50%</span>
+          <span>100%</span>
+        </div>
+      </div>
+
+      <div class="quick-actions animate__animated">
+        <!-- <button class="action-btn small-btn" onclick="addPoints()">
+          <i class="fas fa-plus"></i> إضافة نقاط
+        </button>
+        <button class="action-btn small-btn" onclick="addAbsence()">
+          <i class="fas fa-minus"></i> تسجيل غياب
+        </button> -->
+      </div>
+
+      <div class="resources-section animate__animated">
+        <h3 class="section-title">
+          <i class="fas fa-book-open"></i>المنشورات 
+        </h3>
+        <div class="resources-grid">
+          <div class="resource-item" onclick="openResource('kata')">
+            <div class="resource-icon kata-icon">
+              <i class="fas fa-route"></i>
+            </div>
+            <span>تمارين الكاتا</span>
+          </div>
+          <div class="resource-item" onclick="openResource('kihon')">
+            <div class="resource-icon kihon-icon">
+              <i class="fas fa-hands"></i>
+            </div>
+            <span>أساسيات الكيهون</span>
+          </div>
+          <div class="resource-item" onclick="openResource('kumite')">
+            <div class="resource-icon kumite-icon">
+              <i class="fas fa-people-arrows"></i>
+            </div>
+            <span>تمارين الكوميتيه</span>
+          </div>
+          <div class="resource-item" onclick="openResource('rules')">
+            <div class="resource-icon rules-icon">
+              <i class="fas fa-gavel"></i>
+            </div>
+            <span>قواعد البطولات</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="logout-btn animate__animated" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay" style="display: none;">
+    <div class="modal-box animate__animated" id="modalBox">
+      <div class="modal-icon" id="modalIcon">
+        <i class="fas fa-exclamation"></i>
+      </div>
+      <h3 class="modal-title" id="modalTitle">تنبيه</h3>
+      <div class="modal-message" id="modalMessage">رسالة التنبيه</div>
+      <button class="modal-btn" onclick="closeModal()">إغلاق</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script src="script.js"></script>
+
+  <script>
+// بيانات اللاعبين الافتراضية
+const defaultPlayersData = {
+  'login001': { name: 'لوجين أحمد', points: 9, absences: 0, rank: 1, password: 'login001' },
+  'adam002': { name: 'آدم هاني', points: 3, absences: 0, rank: 2, password: 'adam002' },
+  'ahmed003': { name: 'أحمد عطية', points: 1, absences: 1, rank: 3, password: 'ahmed003' },
+  'retag004': { name: 'ريتاج أحمد', points: 0, absences: 1, rank: 4, password: 'retag004' },
+  'omar005': { name: 'عمر عادل', points: 2, absences: 0, rank: 5, password: 'omar005' },
+  'retag006': { name: 'ريتاج محمود', points: -1, absences: 1, rank: 6, password: 'retag006' },
+  'judy007': { name: 'جودي محمود', points: -1, absences: 1, rank: 7, password: 'judy007' },
+  'malak008': { name: 'ملك أيمن', points: 2, absences: 0, rank: 8, password: 'malak008' },
+  'remas009': { name: 'ريماس طارق', points: 2, absences: 0, rank: 9, password: 'remas009' },
+  'malak010': { name: 'ملك محمود السيد', points: 2, absences: 0, rank: 10, password: 'malak010' },
+  'iten011': { name: 'إيتن فتحي', points: 3, absences: 0, rank: 11, password: 'iten011' },
+  'mohamed012': { name: 'محمد عبد التام', points: 2, absences: 0, rank: 12, password: 'mohamed012' },
+  'farah013': { name: 'فرح عادل', points: 2, absences: 0, rank: 13, password: 'farah013' },
+  'nada014': { name: 'ندى أنور', points: 2, absences: 0, rank: 14, password: 'nada014' },
+  'noreen015': { name: 'نورين محمود', points: 2, absences: 0, rank: 15, password: 'noreen015' },
+  'sama016': { name: 'سما وليد', points: 2, absences: 0, rank: 16, password: 'sama016' },
+  'rodina017': { name: 'رودينا إسلام', points: -2, absences: 2, rank: 17, password: 'rodina017' },
+  'nelly018': { name: 'نيللي محمود', points: 2, absences: 0, rank: 18, password: 'nelly018' },
+  'taha019': { name: 'طه إسلام طه', points: 1, absences: 0, rank: 19, password: 'taha019' },
+  'adel020': { name: 'عادل صبري', points: 1, absences: 0, rank: 20, password: 'adel020' },
+  'mohamedsaid021': { name: 'محمد سعيد', points: 3, absences: 0, rank: 21, password: 'mohamedsaid021' },
+  'Afnan022': { name: 'أفنان عادل', points: 2, absences: 0, rank: 22, password: 'Afnan022' },
+  'yasen000': { name: 'ياسين احمد', points: 2, absences: 0, rank: 23, password: 'yasen000' },
+  'Hanen787': { name: 'حنين شوقى', points: 2, absences: 0, rank: 24, password: 'Hanen787' },
+  'Elsaed025': { name: 'السيد امام', points: 2, absences: 0, rank: 25, password: 'Elsaed025' },
+  'Basma0026': { name: 'بسمه اشرف ', points: 2, absences: 0, rank: 26, password: 'Basma0026' },
+  'Malak0270': { name: 'ملك احمد', points: 1, absences: 0, rank: 27, password: 'Malak0270' },
+  'Adam0028': { name: 'ادم عمرو', points: 0, absences: 1, rank: 28, password: 'Adam0028' },
+  // 'tark111': { name: 'محمد طارق', points: 0, absences: 0, rank: 0, isAdmin: true, password: 'tark111' },
+  'Belal': { name: 'بلال محمد', points: 0, absences: 0, rank: 0, isAdmin: true, password: 'Belal' }
+};
+
+// تحميل البيانات من localStorage أو استخدام الافتراضية
+let playersData = loadPlayersData();
+let currentPlayer = null;
+
+// دالة تحميل البيانات
+function loadPlayersData() {
+  const saved = localStorage.getItem('karatePlayersData');
+  return saved ? JSON.parse(saved) : defaultPlayersData;
+}
+
+// تهيئة الجسيمات في الخلفية مع إعدادات متقدمة
+document.addEventListener('DOMContentLoaded', function() {
+  particlesJS('particles-js', {
+    particles: {
+      number: {
+        value: 120,
+        density: {
+          enable: true,
+          value_area: 1000
+        }
+      },
+      color: {
+        value: ["#ffffff", "#3b82f6", "#1e3a8a", "#f97316"]
+      },
+      shape: {
+        type: ["circle", "triangle", "polygon"],
+        stroke: {
+          width: 0,
+          color: "#000000"
+        },
+        polygon: {
+          nb_sides: 6
+        }
+      },
+      opacity: {
+        value: 0.6,
+        random: true,
+        anim: {
+          enable: true,
+          speed: 1,
+          opacity_min: 0.1,
+          sync: false
+        }
+      },
+      size: {
+        value: 4,
+        random: true,
+        anim: {
+          enable: true,
+          speed: 2,
+          size_min: 0.5,
+          sync: false
+        }
+      },
+      line_linked: {
+        enable: true,
+        distance: 120,
+        color: "#ffffff",
+        opacity: 0.3,
+        width: 1,
+        shadow: {
+          enable: true,
+          color: "#ffffff",
+          blur: 5
+        }
+      },
+      move: {
+        enable: true,
+        speed: 1.5,
+        direction: "none",
+        random: true,
+        straight: false,
+        out_mode: "bounce",
+        bounce: false,
+        attract: {
+          enable: true,
+          rotateX: 600,
+          rotateY: 1200
+        }
+      }
+    },
+    interactivity: {
+      detect_on: "canvas",
+      events: {
+        onhover: {
+          enable: true,
+          mode: ["grab", "bubble"]
+        },
+        onclick: {
+          enable: true,
+          mode: "push"
+        },
+        resize: true
+      },
+      modes: {
+        grab: {
+          distance: 140,
+          line_linked: {
+            opacity: 0.8
+          }
+        },
+        bubble: {
+          distance: 200,
+          size: 6,
+          duration: 2,
+          opacity: 0.8,
+          speed: 3
+        },
+        repulse: {
+          distance: 200,
+          duration: 0.4
+        },
+        push: {
+          particles_nb: 4
+        },
+        remove: {
+          particles_nb: 2
+        }
+      }
+    },
+    retina_detect: true
+  });
+
+  // إضافة عناصر عائمة إضافية للخلفية
+  createFloatingElements();
+
+  // إضافة تأثير للعناصر عند التحميل
+  const inputGroup = document.querySelector('.input-group');
+  setTimeout(() => {
+    inputGroup.classList.add('animate__fadeInUp');
+  }, 300);
+});
+
+// إنشاء عناصر عائمة إضافية للخلفية
+function createFloatingElements() {
+  const container = document.querySelector('.particles-container');
+  const elements = ['◯', '△', '□', '◇', '☆', '⬡', '✦', '✧', '◆', '●'];
+
+  // إنشاء الموجة الأولى من العناصر
+  for (let i = 0; i < 20; i++) {
+    const element = document.createElement('div');
+    element.className = 'floating-element';
+    element.textContent = elements[Math.floor(Math.random() * elements.length)];
+    element.style.left = Math.random() * 100 + '%';
+    element.style.top = Math.random() * 100 + '%';
+    element.style.animationDelay = Math.random() * 15 + 's';
+    element.style.animationDuration = (Math.random() * 25 + 25) + 's';
+    element.style.fontSize = (Math.random() * 20 + 15) + 'px';
+    element.style.opacity = (Math.random() * 0.3 + 0.1);
+    container.appendChild(element);
+  }
+
+  // إنشاء موجة ثانية من العناصر الأكبر
+  for (let i = 0; i < 8; i++) {
+    const element = document.createElement('div');
+    element.className = 'floating-element-large';
+    element.textContent = elements[Math.floor(Math.random() * elements.length)];
+    element.style.left = Math.random() * 100 + '%';
+    element.style.top = Math.random() * 100 + '%';
+    element.style.animationDelay = Math.random() * 20 + 's';
+    element.style.animationDuration = (Math.random() * 30 + 40) + 's';
+    container.appendChild(element);
+  }
+
+  // إنشاء خطوط متموجة
+  for (let i = 0; i < 5; i++) {
+    const wave = document.createElement('div');
+    wave.className = 'wave-line';
+    wave.style.left = Math.random() * 100 + '%';
+    wave.style.animationDelay = Math.random() * 10 + 's';
+    wave.style.animationDuration = (Math.random() * 15 + 20) + 's';
+    container.appendChild(wave);
+  }
+}
+
+// تسجيل الدخول
+function login() {
+  const inputPassword = document.getElementById('playerPassword').value.trim();
+
+  // البحث عن اللاعب بكلمة المرور
+  let foundPlayer = null;
+  let playerId = null;
+
+  for (const [id, player] of Object.entries(playersData)) {
+    if (player.password === inputPassword) {
+      foundPlayer = player;
+      playerId = id;
+      break;
+    }
+  }
+
+  if (foundPlayer) {
+    currentPlayer = foundPlayer; // حفظ اللاعب الحالي
+
+    // التحقق من كلمة المرور للمدربين
+    if (foundPlayer.isAdmin) {
+      // إعادة توجيه بلال إلى صفحة المدرب المنفصلة
+      if (playerId === 'Belal') {
+        window.location.href = 'admin.html';
+        return;
+      }
+    }
+
+    // إخفاء شاشة الدخول بتأثير
+    const loginCard = document.getElementById('loginCard');
+    loginCard.classList.add('animate__fadeOut');
+
+    setTimeout(() => {
+      loginCard.style.display = 'none';
+
+      // تعبئة بيانات اللاعب
+      document.getElementById('playerName').textContent = foundPlayer.name;
+      document.getElementById('playerPoints').textContent = foundPlayer.points;
+      document.getElementById('playerAbsences').textContent = foundPlayer.absences;
+      document.getElementById('playerRank').textContent = foundPlayer.rank;
+
+      // إذا كان المدرب أو المسؤول
+      if (foundPlayer.isAdmin) {
+        showAllPlayersStats();
+      } else {
+        // عرض شاشة الملف الشخصي العادية بتأثير
+        const profileCard = document.getElementById('profileCard');
+        profileCard.style.display = 'block';
+        profileCard.classList.add('animate__fadeIn');
+
+        // تحريك العناصر بشكل متتابع
+        animateElements([
+          '.profile-header',
+          '.stats-container',
+          '.progress-container',
+          '.quick-actions',
+          '.resources-section',
+          '.logout-btn'
+        ]);
+      }
+
+      // تحديث شريط التقدم
+      updateProgressBars();
+    }, 300);
+  } else {
+    showModal('خطأ', 'كلمة المرور غير صحيحة، يرجى المحاولة مرة أخرى', 'error');
+  }
+}
+
+// عرض إحصائيات جميع اللاعبين للمدربين
+function showAllPlayersStats() {
+  const profileCard = document.getElementById('profileCard');
+  profileCard.style.display = 'block';
+  profileCard.classList.add('animate__fadeIn');
+
+  // إنشاء جدول لإحصائيات اللاعبين
+  let statsHTML = `
+    <div class="all-players-stats animate__animated animate__fadeIn">
+      <h3><i class="fas fa-users"></i> إحصائيات جميع اللاعبين</h3>
+      <div class="stats-table-container">
+        <table class="stats-table">
+          <thead>
+            <tr>
+              <th>الترتيب</th>
+              <th>الاسم</th>
+              <th>النقاط</th>
+              <th>الغيابات</th>
+            </tr>
+          </thead>
+          <tbody>
+  `;
+
+  // ترتيب اللاعبين حسب النقاط (تنازلياً)
+  const sortedPlayers = Object.values(playersData)
+    .filter(player => !player.isAdmin) // استبعاد المدربين من القائمة
+    .sort((a, b) => b.points - a.points);
+
+  // إضافة بيانات كل لاعب إلى الجدول
+  sortedPlayers.forEach((player, index) => {
+    statsHTML += `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${player.name}</td>
+        <td>${player.points}</td>
+        <td>${player.absences}</td>
+      </tr>
+    `;
+  });
+
+  statsHTML += `
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
+  // إضافة الجدول إلى بطاقة الملف الشخصي
+  profileCard.innerHTML = `
+    <div class="profile-header animate__animated">
+      <div class="avatar-container">
+        <div class="avatar-circle">
+          <i class="fas fa-user-tie"></i>
+        </div>
+      </div>
+      <h2>${currentPlayer.name}</h2>
+      <div class="belt-level">
+        <div class="belt-progress" id="beltProgress"></div>
+        <span>مدرب النظام</span>
+      </div>
+    </div>
+    ${statsHTML}
+    <button class="logout-btn animate__animated" onclick="logout()">
+      <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+    </button>
+  `;
+
+  // تحريك العناصر بشكل متتابع
+  animateElements([
+    '.profile-header',
+    '.all-players-stats',
+    '.logout-btn'
+  ]);
+}
+
+// تسجيل الخروج
+function logout() {
+  const profileCard = document.getElementById('profileCard');
+  profileCard.classList.add('animate__fadeOut');
+
+  setTimeout(() => {
+    profileCard.style.display = 'none';
+    const loginCard = document.getElementById('loginCard');
+    loginCard.style.display = 'block';
+    loginCard.classList.remove('animate__fadeOut');
+    loginCard.classList.add('animate__fadeIn');
+
+    // مسح حقل الإدخال
+    document.getElementById('playerId').value = '';
+    document.getElementById('playerPassword').value = '';
+  }, 300);
+}
+
+// إضافة نقاط
+function addPoints() {
+  if (currentPlayer) {
+    currentPlayer.points += 10;
+    document.getElementById('playerPoints').textContent = currentPlayer.points;
+    updateProgressBars();
+    showModal('نجاح', 'تم إضافة 10 نقاط بنجاح', 'success');
+  }
+}
+
+// إضافة غياب
+function addAbsence() {
+  if (currentPlayer) {
+    currentPlayer.absences += 1;
+    document.getElementById('playerAbsences').textContent = currentPlayer.absences;
+    updateProgressBars();
+    showModal('تنبيه', 'تم تسجيل غياب للاعب', 'warning');
+  }
+}
+
+// فتح مصدر تعليمي
+function openResource(type) {
+  if (type === 'kumite') {
+    // Show modal with local videos for kumite exercises
+    const modal = document.getElementById('modalOverlay');
+    const modalBox = document.getElementById('modalBox');
+    const modalIcon = document.getElementById('modalIcon');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMessage = document.getElementById('modalMessage');
+
+    modalTitle.textContent = 'تمارين الكوميتيه';
+    modalIcon.innerHTML = '<i class="fas fa-video"></i>';
+    modalIcon.style.backgroundColor = 'rgba(247, 127, 0, 0.1)';
+    modalIcon.style.color = 'var(--accent-color)';
+
+    // Embed local videos
+    modalMessage.innerHTML = `
+      <div class="videos-container" style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+        <video src="leg1.mp4" controls style="width: 100%; border-radius: 12px;"></video>
+        <video src="leg2.mp4" controls style="width: 100%; border-radius: 12px;"></video>
+        <video src="leg3.mp4" controls style="width: 100%; border-radius: 12px;"></video>
+      </div>
+    `;
+
+    modal.style.display = 'flex';
+    modalBox.classList.remove('animate__fadeOut');
+    modalBox.classList.add('animate__bounceIn');
+  } else {
+    let title = '';
+    let message = '';
+
+    switch(type) {
+      case 'kata':
+        title = 'تمارين الكاتا';
+        message = 'سيتم فتح قسم تمارين الكاتا قريباً';
+        break;
+      case 'kihon':
+        title = 'أساسيات الكيهون';
+        message = 'سيتم فتح قسم أساسيات الكيهون قريباً';
+        break;
+      case 'rules':
+        title = 'قواعد البطولات';
+        message = 'سيتم فتح قسم قواعد البطولات قريباً';
+        break;
+    }
+
+    showModal(title, message, 'info');
+  }
+}
+
+// عرض نافذة التنبيه
+function showModal(title, message, type) {
+  const modal = document.getElementById('modalOverlay');
+  const modalBox = document.getElementById('modalBox');
+  const modalIcon = document.getElementById('modalIcon');
+
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalMessage').textContent = message;
+
+  // تغيير الأيقونة حسب نوع التنبيه
+  modalIcon.className = 'modal-icon';
+  switch(type) {
+    case 'error':
+      modalIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+      modalIcon.style.backgroundColor = 'rgba(230, 57, 70, 0.1)';
+      modalIcon.style.color = 'var(--error-color)';
+      break;
+    case 'success':
+      modalIcon.innerHTML = '<i class="fas fa-check-circle"></i>';
+      modalIcon.style.backgroundColor = 'rgba(42, 157, 143, 0.1)';
+      modalIcon.style.color = 'var(--success-color)';
+      break;
+    case 'warning':
+      modalIcon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+      modalIcon.style.backgroundColor = 'rgba(233, 196, 106, 0.1)';
+      modalIcon.style.color = 'var(--warning-color)';
+      break;
+    case 'info':
+      modalIcon.innerHTML = '<i class="fas fa-info-circle"></i>';
+      modalIcon.style.backgroundColor = 'rgba(29, 53, 87, 0.1)';
+      modalIcon.style.color = 'var(--secondary-color)';
+      break;
+  }
+
+  modal.style.display = 'flex';
+  modalBox.classList.add('animate__bounceIn');
+}
+
+// إغلاق نافذة التنبيه
+function closeModal() {
+  const modal = document.getElementById('modalOverlay');
+  const modalBox = document.getElementById('modalBox');
+
+  modalBox.classList.remove('animate__bounceIn');
+  modalBox.classList.add('animate__fadeOut');
+
+  setTimeout(() => {
+    modal.style.display = 'none';
+    modalBox.classList.remove('animate__fadeOut');
+  }, 300);
+}
+
+// تحريك العناصر بشكل متتابع
+function animateElements(selectors) {
+  selectors.forEach((selector, index) => {
+    const element = document.querySelector(selector);
+    if (element) {
+      setTimeout(() => {
+        element.classList.add('animate__fadeInUp');
+      }, index * 100);
+    }
+  });
+}
+
+// تحديث أشرطة التقدم
+function updateProgressBars() {
+  if (currentPlayer && !currentPlayer.isAdmin) {
+    // حساب نسبة التقدم الأسبوعي (عشوائي للتوضيح)
+    const weekProgress = Math.min(currentPlayer.points / 100 * 10, 100);
+    document.getElementById('weekProgress').style.width = weekProgress + '%';
+  }
+}
+
+</script>
+</body>
+</html>
